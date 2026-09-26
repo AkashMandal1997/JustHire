@@ -13,4 +13,30 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) {
+            return undefined;
+          }
+
+          if (/[\\/]react(?:-dom)?[\\/]|[\\/]scheduler[\\/]/.test(id)) {
+            return "react-vendor";
+          }
+          if (/[\\/]@reduxjs[\\/]|[\\/]react-redux[\\/]|[\\/]redux/.test(id)) {
+            return "state-vendor";
+          }
+          if (/[\\/]@radix-ui[\\/]|[\\/]lucide-react[\\/]|[\\/]embla-carousel/.test(id)) {
+            return "ui-vendor";
+          }
+          if (/[\\/]framer-motion[\\/]/.test(id)) {
+            return "motion-vendor";
+          }
+
+          return undefined;
+        },
+      },
+    },
+  },
 })
